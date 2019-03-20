@@ -1,12 +1,7 @@
 
-<app-header></app-header>
-
+<app-header (navChoice)="onSelect($event)"></app-header>
 <div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <app-recipes></app-recipes>
-      <app-shopping-list></app-shopping-list>
-    </div>
-  </div>
+  <app-recipes *ngIf="navChosen === 'recipes'"></app-recipes>
+  <app-shopping-list *ngIf="navChosen === 'shopping-list'"></app-shopping-list>
 </div>
 
