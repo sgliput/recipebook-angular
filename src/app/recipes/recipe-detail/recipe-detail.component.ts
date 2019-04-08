@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../recipe.model';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
-import { Ingredient } from '../../shared/ingredient.model';
 import { RecipeService } from '../recipe.service';
-import { ActivatedRoute, Params } from '@angular/router';
-
+import { ActivatedRoute, Params, Router } from '@angular/router';
+ 
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
@@ -13,9 +12,12 @@ import { ActivatedRoute, Params } from '@angular/router';
 export class RecipeDetailComponent implements OnInit {
   recipe: Recipe;
   id: number;
-
-  constructor(private shoppingListService: ShoppingListService, private recipeService: RecipeService, private route: ActivatedRoute) { }
-
+ 
+  constructor(private shoppingListService: ShoppingListService, 
+              private recipeService: RecipeService, 
+              private route: ActivatedRoute, 
+              private router: Router) { }
+ 
   ngOnInit() {
     this.route.params.subscribe(
       (params: Params) => {
@@ -23,12 +25,22 @@ export class RecipeDetailComponent implements OnInit {
       this.id = +params.id;
       this.recipe = this.recipeService.getRecipe(this.id);
       }
-    )
-    
+    )    
   }
-
+ 
   addToShoppingList() {
     this.shoppingListService.moveToShoppingList(this.recipe.ingredients);
   }
-
+ 
+  onEditRecipe(){
+    this.router.navigate(["edit"], {relativeTo: this.route});
+    //Same route as above but more specific in using the stored id; the above is still preferred
+    //this.router.navigate(["../", this.id, "edit"], {relativeTo: this.route});
+  }
+ 
+  onDelete() {
+    this.recipeService.deleteRecipe(this.id);
+    this.router.navigate(["/recipes"]);
+  }
+ 
 }
